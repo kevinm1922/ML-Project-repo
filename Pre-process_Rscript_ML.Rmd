@@ -4,6 +4,10 @@ author: "Kevin Muñoz"
 output: html_document
 ---
 
+
+##Pre-processing Phase.
+
+
 ```{r, echo=TRUE}
 
 #Clear global environment. 
