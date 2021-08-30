@@ -1,0 +1,118 @@
+---
+title: "ML_FinalProject_Markdown"
+author: "Kevin Muñoz"
+output: html_document
+---
+
+```{r, echo=TRUE}
+
+#Clear global environment. 
+rm(list=ls())
+
+#Load packages.
+library(plyr)
+library(dplyr)
+library(lubridate)
+library(caret)
+library(table1)
+library(pROC)
+library(DMwR)
+
+#Read CSV file.
+d.info <- read.csv("~/Desktop/framingham.csv")
+
+#Place Na's to 0 to preserve data.
+d.info[is.na(d.info)] <- 0
+
+
+#Change all continuous variables to categorical variables.
+d.info$TenYearCHD <- factor(d.info$TenYearCHD)
+d.info$currentSmoker <- as.factor(d.info$currentSmoker)
+d.info$BPMeds <- as.factor(d.info$BPMeds)
+d.info$prevalentStroke <- as.factor(d.info$prevalentStroke)
+d.info$prevalentHyp <- as.factor(d.info$prevalentHyp)
+d.info$diabetes <- as.factor(d.info$diabetes)
+d.info$education <- as.factor(d.info$education)
+
+#Format male variable into sex variable and give it levels for easy representation. 
+d.info$male <- as.factor(d.info$male)
+d.info <- dplyr::rename(d.info, sex = male)
+
+#create the p-value
+pvalue <- function(x, ...) {
+  # Construct vectors of data y, and groups (strata) g
+  y <- unlist(x)
+  g <- factor(rep(1:length(x), times=sapply(x, length)))
+  if (is.numeric(y)) {
+    # For numeric variables, perform a standard 2-sample t-test
+    p <- t.test(y ~ g)$p.value
+  } else {
+    # For categorical variables, perform a chi-squared test of independence
+    p <- chisq.test(table(y, g))$p.value
+  }
+  # Format the p-value, using an HTML entity for the less-than sign.
+  # The initial empty string places the output on the line below the variable label.
+  c("", sub("<", "&lt;", format.pval(p, digits=3, eps=0.001)))
+}
+
+#Create the table with p-value and column.
+
+d.data1<- d.info$TenYearCHD
+
+table1(~ . | d.data1, data= d.info,
+       overall=F, extra.col=list(`P-value`=pvalue))
+
+#Total numbers based on TenYearCHD.
+summary(d.info$TenYearCHD)
+
+
+
+#Set seed for reproducibility.
+set.seed(456)
+
+#Use createDataPartition command to create a rough 80-20 split of the dataset into training and testing. 
+train_index <- createDataPartition(d.info$TenYearCHD, p = .8, list = FALSE, times = 1)
+
+
+#Create train and test dataset plus run a summary for both. 
+d.train <- d.info[train_index,]
+summary(as.factor(d.train$TenYearCHD))
+
+
+d.test <- d.info[-train_index,]
+summary(as.factor(d.test$TenYearCHD))
+
+
+#Write training into a CSV file.
+write.csv(d.train, "d.train.csv")
+
+#Write test into a CSV file.
+write.csv(d.test, "d.test.csv")
+
+
+
+##Parts of Feature Engineering steps:
+
+#Balancing classes using SMOTE in training dataset. 
+
+d.train <- SMOTE(TenYearCHD ~ ., data = d.train,
+                 perc.over = 200, perc.under = 100, k = 1)
+
+
+#Normalization and standardization of continuous variables. 
+#Use training data set and subtract mean to center, divide by standard deviation
+preProcValues <- preProcess(d.train, method = c("center", "scale"))
+
+trainTransformed <- predict(preProcValues, d.train)
+testTransformed <- predict(preProcValues, d.test)
+
+
+#Write transformed test and train into a csv file.
+write.csv(trainTransformed, "trainTransformed.csv")
+
+write.csv(testTransformed, "testTransformed.csv")
+
+
+
+```
+
