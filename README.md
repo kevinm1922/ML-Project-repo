@@ -8,7 +8,7 @@ During the last century, there has been a rise inheart disease within the United
 
 **Data**
 
-This project will use a dataset provided by kaggle.com [link](https://www.kaggle.com/dileep070/heart-disease-prediction-using-logistic-regression) that focuses on a cardiovascular study on residents of the town of Framingham, Massachusetts. There are 4238 observations in the dataset. The dataset includes 1 response (10-year risk of coronary heart disease CHD) and 15 predictors (gender, age, education, current smoker, cigs per day, BP meds, prevalent stroke, prevalent hyp, diabetes, tot chol, sys BP, dia BP, BMI, heart rate, and glucose). We will perform a 80/20 split of the data for our training and test sets, since there are no site or longitudinal parameters that would make sense to split on.
+This project will use a dataset provided by kaggle.com ([link](https://www.kaggle.com/dileep070/heart-disease-prediction-using-logistic-regression)) that focuses on a cardiovascular study on residents of the town of Framingham, Massachusetts. There are 4238 observations in the dataset. The dataset includes 1 response (10-year risk of coronary heart disease CHD) and 15 predictors (gender, age, education, current smoker, cigs per day, BP meds, prevalent stroke, prevalent hyp, diabetes, tot chol, sys BP, dia BP, BMI, heart rate, and glucose). We will perform a 80/20 split of the data for our training and test sets, since there are no site or longitudinal parameters that would make sense to split on.
 
 **Proposed Methods** 
 
