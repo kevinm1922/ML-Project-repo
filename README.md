@@ -1,4 +1,4 @@
-# Predictive Modeling for the Overall Risk of HeartDisease from Patient Data
+# Predictive Modeling for the Overall Risk of Heart Disease from Patient Data
 
 **Background**
 
